@@ -38,5 +38,39 @@ module.exports = {
         }
       }
     );
+  },
+  get: (req, res) => {
+    // res.send("get Called");
+    mongoose.connect(
+      "mongodb+srv://dhanraj:D8899@cluster0-abnij.mongodb.net/mydb?retryWrites=true&w=majority",
+      { useNewUrlParser: true, useUnifiedTopology: true },
+      err => {
+        if (!err) {
+          User.find(function(error, result) {
+            const data = {};
+            data.status = result.status;
+            // result.status = 200;
+            data.data = result;
+            res.send(data);
+          });
+        } else {
+          const result = {};
+          result.status = 500;
+          result.error = err;
+          res.send(result);
+        }
+      }
+    );
+  },
+  login: (req, res) => {
+    res.send("ok");
+    // console.log(req.body);
+    // User.find(function(err, result) {
+    //   if (!err) {
+    //     res.send(result);
+    //   } else {
+    //     res.send(err);
+    //   }
+    // });
   }
 };
