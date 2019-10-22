@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
 const User = require("../models/users");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const db = mongoose.connection;
-console.log(db);
+// const db = mongoose.connection;
+mongoose.connect(
+  "mongodb+srv://dhanraj:D8899@cluster0-abnij.mongodb.net/mydb?retryWrites=true&w=majority",
+  { useNewUrlParser: true, useUnifiedTopology: true }
+);
+const connection = mongoose.connection;
+// console.log(db);
 
 const connUri = process.env.MONGO_LOCAL_CONN_URL;
 module.exports = {
@@ -63,14 +70,34 @@ module.exports = {
     );
   },
   login: (req, res) => {
-    res.send("ok");
-    // console.log(req.body);
-    // User.find(function(err, result) {
-    //   if (!err) {
-    //     res.send(result);
-    //   } else {
-    //     res.send(err);
-    //   }
-    // });
+    const { name, password } = req.body;
+    User.findOne({ name }, (err, user) => {
+      console.log(user);
+      const result = {};
+      if (user && !err) {
+        bcrypt
+          .compare(password, user.password)
+          .then(match => {
+            if (match) {
+              console.log("Match", match);
+              const secret = process.env.JWT_SECRET;
+              const options = { expiresIn: "2d", issuer: "https://scotch.io" };
+
+              const token = jwt.sign({ user: user.name }, secret, options);
+              // console.log(token);
+              result.token = token;
+              // result.status = status;
+              result.result = user;
+            } else {
+              result.status = 401;
+              result.error = "Authentication Erro";
+            }
+            res.send(result);
+          })
+          .catch(msg => {
+            console.log("Error", msg);
+          });
+      }
+    });
   }
 };

@@ -7,8 +7,8 @@ module.exports = {
     if (authorizationHeaader) {
       const token = req.headers.authorization.split(" ")[1]; // Bearer <token>
       const options = {
-        expiresIn: "2d",
-        issuer: "https://scotch.io"
+        expiresIn: "50"
+        // issuer: "https://scotch.io"
       };
       try {
         // verify makes sure that the token hasn't expired and has been issued by us
