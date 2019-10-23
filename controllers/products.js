@@ -23,7 +23,7 @@ module.exports = {
     });
   },
   get: (req, res) => {
-    Product.find(function(err, product) {
+    Product.find(function (err, product) {
       const result = {};
       if (!err && product) {
         result.data = product;
@@ -64,5 +64,25 @@ module.exports = {
         res.send(error);
       }
     );
+  },
+  getProductDatails: (req, res) => {
+    Product.aggregate([
+      { $lookup : 
+        { from: 'products', localField: 'id', foreignField: 'product', as: 'orders' }}])
+        .exec().then(function(data){
+          res.send(data)
+          console.log(data)
+          }).catch(function(err){
+          console.log(err)
+          })
+  },
+  getMatchAgg: (req, res)=>{
+    Product.aggregate([{
+       $match: {'price' : {$in : [9]}}
+    }]).exec().then((data)=>{
+      res.send(data);
+    }).catch((error)=>{
+      res.send(error);
+    })
   }
 };
