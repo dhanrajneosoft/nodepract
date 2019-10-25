@@ -8,6 +8,7 @@ const router = express.Router();
 const routes = require("./routes/index");
 const environment = "development"; // development
 const stage = require("./config")[environment];
+require('./models/mongoose.db');
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({

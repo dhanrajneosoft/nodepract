@@ -1,25 +1,41 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
-
 const environment = process.env.NODE_ENV;
 const stage = require("../config")[environment];
-
 // schema maps to a collection
 const Schema = mongoose.Schema;
-
+const addressSchema = new Schema({add: String});
 const userSchema = new Schema({
-  name: {
-    type: "String",
+  email: {
+    type: String,
     required: true,
     trim: true,
     unique: true
   },
-  password: {
-    type: "String",
+  mobile: {
+    type: Number,
+    required: true,
+    minlength: 10,
+    maxlength: 10,
+    trim : true,
+    unique: true,
+  },
+  firstname: {
+    type: String,
     required: true,
     trim: true
-  }
+  },
+  lastname: {
+    type: String,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  address: [addressSchema]
 });
 userSchema.pre("save", function(next) {
   const user = this;
@@ -29,7 +45,7 @@ userSchema.pre("save", function(next) {
   } else {
     bcrypt.hash(user.password, stage.saltingRounds, function(err, hash) {
       if (err) {
-        console.log("Error hashing password for user", user.name);
+        // console.log("Error hashing password for user", user.name);
         next(err);
       } else {
         user.password = hash;

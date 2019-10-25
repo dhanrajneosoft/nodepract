@@ -3,48 +3,30 @@ const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// const db = mongoose.connection;
-mongoose.connect(
-  "mongodb+srv://dhanraj:D8899@cluster0-abnij.mongodb.net/mydb?retryWrites=true&w=majority",
-  { useNewUrlParser: true, useUnifiedTopology: true }
-);
+// const db = mongoose.connection
 const connection = mongoose.connection;
-// console.log(db);
-
 const connUri = process.env.MONGO_LOCAL_CONN_URL;
 module.exports = {
   add: (req, res) => {
     let result = {};
     let status = 201;
-    mongoose.connect(
-      "mongodb+srv://dhanraj:D8899@cluster0-abnij.mongodb.net/mydb?retryWrites=true&w=majority",
-      { useNewUrlParser: true, useUnifiedTopology: true },
-      err => {
-        if (!err) {
-          const { name, password } = req.body;
-          const user = new User({ name, password }); // document = instance of a model
-          // TODO: We can hash the password here before we insert instead of in the model
-          user.save((err, user) => {
-            if (!err) {
-              result.status = status;
-              delete user.password;
-              result.result = user;
-              // delete result.result.password;
-            } else {
-              status = 500;
-              result.status = status;
-              result.error = err;
-            }
-            res.status(status).send(result);
-          });
-        } else {
-          status = 500;
-          result.status = status;
-          result.error = err;
-          res.status(status).send(result);
-        }
+    const data = req.body;
+    const user = new User(data); // document = instance of a model
+  //  user.save()
+    // TODO: We can hash the password here before we insert instead of in the model
+    user.save((err, user) => {
+      if (!err) {
+        console.log(user);
+        result.status = status;
+        // delete user.password;
+        result.result = user;
+      } else {
+        status = 500;
+        result.status = status;
+        result.error = err;
       }
-    );
+      res.status(status).send(result);
+    });
   },
   get: (req, res) => {
     // res.send("get Called");
@@ -53,7 +35,7 @@ module.exports = {
       { useNewUrlParser: true, useUnifiedTopology: true },
       err => {
         if (!err) {
-          User.find(function(error, result) {
+          User.find(function (error, result) {
             const data = {};
             data.status = result.status;
             // result.status = 200;
@@ -70,8 +52,9 @@ module.exports = {
     );
   },
   login: (req, res) => {
-    const { name, password } = req.body;
-    User.findOne({ name }, (err, user) => {
+    const { username, password } = req.body;
+    console.log({ mobile: username });
+    User.findOne({ mobile: username }, (err, user) => {
       console.log(user);
       const result = {};
       if (user && !err) {
@@ -82,7 +65,6 @@ module.exports = {
               console.log("Match", match);
               const secret = process.env.JWT_SECRET;
               const options = { expiresIn: "2d", issuer: "https://scotch.io" };
-
               const token = jwt.sign({ user: user.name }, secret, options);
               // console.log(token);
               result.token = token;
@@ -90,14 +72,20 @@ module.exports = {
               result.result = user;
             } else {
               result.status = 401;
-              result.error = "Authentication Erro";
+              result.error = "Authentication Error";
             }
             res.send(result);
           })
           .catch(msg => {
             console.log("Error", msg);
           });
+      }else{
+
       }
     });
+  },
+  upload: (req, res)=>{
+    // console.log("request", req.body.);
+    // res.send(req.files);
   }
 };
