@@ -13,6 +13,10 @@ const userSchema = new Schema({
     trim: true,
     unique: true
   },
+  role:{
+    type: String,
+    required: true,
+  },
   mobile: {
     type: Number,
     required: true,

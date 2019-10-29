@@ -65,7 +65,7 @@ module.exports = {
               console.log("Match", match);
               const secret = process.env.JWT_SECRET;
               const options = { expiresIn: "2d", issuer: "https://scotch.io" };
-              const token = jwt.sign({ user: user.name }, secret, options);
+              const token = jwt.sign({ user }, secret, options);
               // console.log(token);
               result.token = token;
               // result.status = status;
