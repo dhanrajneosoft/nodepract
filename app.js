@@ -10,6 +10,7 @@ const environment = "development"; // development
 const stage = require("./config")[environment];
 require('./models/mongoose.db');
 app.use(bodyParser.json());
+app.use(express.static('uploads'))
 app.use(
   bodyParser.urlencoded({
     extended: true

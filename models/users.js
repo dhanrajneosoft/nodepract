@@ -35,7 +35,20 @@ const userSchema = new Schema({
     required: true,
     trim: true
   },
-  address: [addressSchema]
+  address: [addressSchema],
+}, {
+  toObject: {
+    transform: function (doc, ret) {
+      delete ret._id;
+      delete ret.password
+    }
+  },
+  toJSON: {
+    transform: function (doc, ret) {
+      delete ret._id;
+      delete ret.password
+    }
+  }
 });
 userSchema.pre("save", function(next) {
   const user = this;

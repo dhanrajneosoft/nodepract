@@ -80,12 +80,12 @@ module.exports = {
             console.log("Error", msg);
           });
       }else{
-
+        res.send(err);
       }
     });
   },
   upload: (req, res)=>{
-    // console.log("request", req.body.);
-    // res.send(req.files);
+    console.log("request", req.files);
+    res.send(req.file);
   }
 };
