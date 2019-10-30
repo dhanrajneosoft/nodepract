@@ -12,7 +12,8 @@ module.exports = {
     let status = 201;
     const data = req.body;
     const user = new User(data); // document = instance of a model
-  //  user.save()
+    console.log("user", user);
+    //  user.save()
     // TODO: We can hash the password here before we insert instead of in the model
     user.save((err, user) => {
       if (!err) {
@@ -29,27 +30,13 @@ module.exports = {
     });
   },
   get: (req, res) => {
-    // res.send("get Called");
-    mongoose.connect(
-      "mongodb+srv://dhanraj:D8899@cluster0-abnij.mongodb.net/mydb?retryWrites=true&w=majority",
-      { useNewUrlParser: true, useUnifiedTopology: true },
-      err => {
-        if (!err) {
-          User.find(function (error, result) {
-            const data = {};
-            data.status = result.status;
-            // result.status = 200;
-            data.data = result;
-            res.send(data);
-          });
-        } else {
-          const result = {};
-          result.status = 500;
-          result.error = err;
-          res.send(result);
-        }
-      }
-    );
+    User.find(function (error, result) {
+      const data = {};
+      data.status = result.status;
+      // result.status = 200;
+      data.data = result;
+      res.send(data);
+    });
   },
   login: (req, res) => {
     const { username, password } = req.body;
@@ -79,12 +66,12 @@ module.exports = {
           .catch(msg => {
             console.log("Error", msg);
           });
-      }else{
+      } else {
         res.send(err);
       }
     });
   },
-  upload: (req, res)=>{
+  upload: (req, res) => {
     console.log("request", req.files);
     res.send(req.file);
   }
