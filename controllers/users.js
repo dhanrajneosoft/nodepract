@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const authHelper = require('../helpers/auth-helper');
 
 // const db = mongoose.connection
 const connection = mongoose.connection;
@@ -30,13 +31,25 @@ module.exports = {
     });
   },
   get: (req, res) => {
-    User.find(function (error, result) {
+    const user = authHelper.getUserByToken(req);
+    User.findById(user.user._id, function (error, result) {
       const data = {};
       data.status = result.status;
       // result.status = 200;
       data.data = result;
       res.send(data);
     });
+  },
+  update: (req, res) => {
+    const userData = authHelper.getUserByToken(req);
+    const user = new User(req.body);
+    User.findByIdAndUpdate(userData.user._id, user).exec((err, result) => {
+      if (!err && result) {
+        res.send(result);
+      } else {
+        res.send(err);
+      }
+    })
   },
   login: (req, res) => {
     const { username, password } = req.body;

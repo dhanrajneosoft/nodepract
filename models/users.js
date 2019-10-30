@@ -43,14 +43,14 @@ const userSchema = new Schema({
 }, {
   toObject: {
     transform: function (doc, ret) {
-      delete ret._id;
-      // delete ret.password
+      // delete ret._id;
+      delete ret.password
     }
   },
   toJSON: {
     transform: function (doc, ret) {
-      delete ret._id;
-      // delete ret.password
+      // delete ret._id;
+      delete ret.password
     }
   }
 });

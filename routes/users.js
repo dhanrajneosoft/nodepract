@@ -20,7 +20,8 @@ var upload = multer({ storage: storage })
 // var upload = multer({ dest: 'uploads'});
 module.exports = router => {
   router.route("/register").post(controller.add);
-  router.route("/users").get(auth, authorize(Role.Admin), controller.get);
+  router.route("/users").get(auth, controller.get);
+  router.route("/users").put(auth, controller.update);
   router.route("/login").post(controller.login);
   router.route("/fileupload").post(upload.single('avtar'), controller.upload);
 };
