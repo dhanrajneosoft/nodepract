@@ -29,6 +29,7 @@ const cartSchema = new Schema({
                   })); 
                   element.price = record.price;
                   element.selling_price = record.selling_price;
+                  element.mrp = record.mrp;
                   element.total = record.selling_price * element.quantity;
                   
               });
