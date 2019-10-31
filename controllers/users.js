@@ -43,7 +43,7 @@ module.exports = {
   update: (req, res) => {
     const userData = authHelper.getUserByToken(req);
     const user = new User(req.body);
-    User.findByIdAndUpdate(userData.user._id, user).exec((err, result) => {
+    User.findByIdAndUpdate(userData.user._id, req.body).exec((err, result) => {
       if (!err && result) {
         res.send(result);
       } else {
@@ -87,5 +87,16 @@ module.exports = {
   upload: (req, res) => {
     console.log("request", req.files);
     res.send(req.file);
+  },
+  changePassword: async (req, res) => {
+    const userData = authHelper.getUserByToken(req);
+    const hash = await authHelper.generateBcryptPassword(req.body.password);
+    User.findByIdAndUpdate(userData.user._id, { password: hash }).exec((err, result) => {
+      if (!err && result) {
+        res.send(result);
+      } else {
+        res.send(err);
+      }
+    })
   }
 };

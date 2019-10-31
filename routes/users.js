@@ -23,5 +23,6 @@ module.exports = router => {
   router.route("/users").get(auth, controller.get);
   router.route("/users").put(auth, controller.update);
   router.route("/login").post(controller.login);
+  router.route("/change-password").put(controller.changePassword);
   router.route("/fileupload").post(upload.single('avtar'), controller.upload);
 };
