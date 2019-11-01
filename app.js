@@ -8,6 +8,7 @@ const router = express.Router();
 const routes = require("./routes/index");
 const environment = "development"; // development
 const stage = require("./config")[environment];
+const cors = require('cors');
 require('./models/mongoose.db');
 app.use(bodyParser.json());
 app.use(express.static('uploads'))
@@ -16,6 +17,7 @@ app.use(
     extended: true
   })
 );
+app.use('*', cors());
 if (environment !== "production") {
   app.use(logger("dev"));
 }
