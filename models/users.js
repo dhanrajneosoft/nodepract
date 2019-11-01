@@ -60,7 +60,7 @@ userSchema.pre("save", function(next) {
     // don't rehash if it's an old user
     next();
   } else {
-    bcrypt.hash(user.password, stage.saltingRounds, function(err, hash) {
+    bcrypt.hash(user.password, 10, function(err, hash) {
       if (err) {
         // console.log("Error hashing password for user", user.name);
         next(err);
