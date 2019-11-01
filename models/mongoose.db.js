@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 console.log(process.env.MONGO_DBURI);
-mongoose.connect(process.env.MONGO_DBURI, {useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex: true });
+mongoose.connect('mongodb+srv://dhanraj:D8899@cluster0-abnij.mongodb.net/mydb?retryWrites=true', {useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex: true });
 mongoose.connection.on('connected', function(){
     console.log('Mogodb connected');
 })
