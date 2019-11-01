@@ -17,7 +17,7 @@ app.use(
     extended: true
   })
 );
-app.use('*', cors());
+app.use(cors());
 if (environment !== "production") {
   app.use(logger("dev"));
 }
