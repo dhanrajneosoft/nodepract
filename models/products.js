@@ -8,7 +8,7 @@ const productSchema = new Schema({
     type: Number,
     required: true,
     min: [1, "min value should be 1"],
-    max: [100, "max value should be 100"]
+    max: [1000000, "max value should be 1000000"]
   },
   selling_price: { type: Number, required: true },
   description: { type: String, required: false },
