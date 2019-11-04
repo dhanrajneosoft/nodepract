@@ -11,6 +11,7 @@ const productSchema = new Schema({
     max: [1000000, "max value should be 1000000"]
   },
   selling_price: { type: Number, required: true },
+  images: [{type: String}],
   description: { type: String, required: false },
   created_at: { type: Date, default: Date.now },
   quantity: {type : Number, required: true}
