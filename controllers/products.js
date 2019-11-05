@@ -63,22 +63,47 @@ module.exports = {
   },
   getProductDatails: (req, res) => {
     Product.aggregate([
-      { $lookup : 
-        { from: 'products', localField: 'id', foreignField: 'product', as: 'orders' }}])
-        .exec().then(function(data){
-          res.send(data)
-          console.log(data)
-          }).catch(function(err){
-          console.log(err)
-          })
+      {
+        $lookup:
+          { from: 'products', localField: 'id', foreignField: 'product', as: 'orders' }
+      }])
+      .exec().then(function (data) {
+        res.send(data)
+        console.log(data)
+      }).catch(function (err) {
+        console.log(err)
+      })
   },
-  getMatchAgg: (req, res)=>{
+  getMatchAgg: (req, res) => {
     Product.aggregate([{
-       $match: {'price' : {$in : [9]}}
-    }]).exec().then((data)=>{
+      $match: { 'price': { $in: [9] } }
+    }]).exec().then((data) => {
       res.send(data);
-    }).catch((error)=>{
+    }).catch((error) => {
       res.send(error);
     })
+  },
+  uploadProductImage: (req, res) => {
+    console.log(req.body);
+    var product = new Product({ images: { url: req.file.filename } });
+    delete product._id;
+    console.log('product image', product);
+
+    Product.updateOne({ _id: req.body.product_id }, { $push: { images: [{ url: req.file.filename }] } }).exec((err, result) => {
+      if (!err && result) {
+        res.send(result);
+      } else {
+        res.send(err);
+      }
+    });
+  },
+  deleteProductImageByImageId: (req, res) => {
+      Product.findByIdAndUpdate({_id : req.body.product_id}, {$pull : { images : {_id : req.params.id}}}).exec((err, result)=>{
+           if(!err && result){
+             res.send(result);
+           }else {
+             res.send(err);
+           }
+      }) 
   }
 };
