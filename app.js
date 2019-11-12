@@ -22,7 +22,11 @@ if (environment !== "production") {
   app.use(logger("dev"));
 }
 app.use("/api/v1", routes(router));
-app.listen( process.env.PORT || stage.port, () => {
+app.get('/users/[dc]{1}([0-9]|[0-3][0-9]|4[0-6])/demo', function (req, res) {
+  res.send('OK');
+})
+app.listen(process.env.PORT || stage.port, () => {
   // console.log(`Server now listening at localhost: ${stage.port}`);
 });
+
 module.exports = app;

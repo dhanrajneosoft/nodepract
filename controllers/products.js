@@ -1,13 +1,12 @@
 const Product = require("../models/products");
 const mongoose = require("mongoose");
+const authHelper = require('../helpers/auth-helper')
+const fs = require("fs");
 module.exports = {
   add: (req, res) => {
     const result = {};
     const product = new Product(req.body);
-    console.log(product);
     product.save((err, product) => {
-      console.log(product);
-      console.log(err);
       if (!err && product) {
         result.data = product;
         res.send(result);
@@ -85,10 +84,18 @@ module.exports = {
   },
   uploadProductImage: (req, res) => {
     console.log(req.body);
+    const img = fs.readFileSync(req.file.path);
+    console.log("image", img);
     var product = new Product({ images: { url: req.file.filename } });
-    delete product._id;
-    console.log('product image', product);
-
+    // delete product._id;
+    // console.log('product image', product);
+    var encode_image = img.toString('base64');
+    console.log("images encode", encode_image);
+    // Define a JSONobject for the image attributes for saving to database
+    var finalImg = {
+      contentType: req.file.mimetype,
+      image: new Buffer.from(encode_image, 'base64')
+    };
     Product.updateOne({ _id: req.body.product_id }, { $push: { images: [{ url: req.file.filename }] } }).exec((err, result) => {
       if (!err && result) {
         res.send(result);
@@ -98,12 +105,12 @@ module.exports = {
     });
   },
   deleteProductImageByImageId: (req, res) => {
-      Product.findByIdAndUpdate({_id : req.body.product_id}, {$pull : { images : {_id : req.params.id}}}).exec((err, result)=>{
-           if(!err && result){
-             res.send(result);
-           }else {
-             res.send(err);
-           }
-      }) 
+    Product.findByIdAndUpdate({ _id: req.body.product_id }, { $pull: { images: { _id: req.params.id } } }).exec((err, result) => {
+      if (!err && result) {
+        res.send(result);
+      } else {
+        res.send(err);
+      }
+    })
   }
 };

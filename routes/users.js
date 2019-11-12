@@ -1,6 +1,6 @@
 const controller = require("../controllers/users");
 const auth = require("../middleware/auth")["validateToken"];
-var multer  = require('multer')
+var multer = require('multer')
 const path = require('path');
 const authorize = require('../helpers/authorize')
 const Role = require('../helpers/role');
