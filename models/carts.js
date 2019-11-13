@@ -34,9 +34,7 @@ const cartSchema = new Schema({
                 element.mrp = record.mrp;
                 element.total = record.selling_price * element.quantity;
             });
-            console.log("cart is this", this);
             next();
-            console.log('End')
             //  next();
         } else {
             console.log(err);
@@ -51,10 +49,7 @@ const cartSchema = new Schema({
         console.log(value);
         return value.id;
     });
-    console.log("products ...................", prodID);
     const productsData = product.find({ _id: { $in: prodID } }).exec(async (err, result) => {
-        console.log("product informatin", result);
-        console.log("user products", prd);
         if (!err && result) {
             await prod.$push.product.forEach(async (element) => {
 
@@ -63,18 +58,15 @@ const cartSchema = new Schema({
                         return await true;
                     }
                 }));
-                console.log("record ....................", record)
                 element.price = record.price;
                 element.selling_price = record.selling_price;
                 element.mrp = record.mrp;
-                element.total = record.selling_price * element.quantity;
+                element.total = record.selling_price * record.quantity;
             });
-            console.log("cart is this", this);
             next();
-            console.log('End')
             //  next();
         } else {
-            console.log(err);
+            res.send(err);
         }
     })
 

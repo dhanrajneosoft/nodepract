@@ -9,7 +9,9 @@ module.exports = {
         const orders = new Orders(req.body);
         // console.log("cart list", controller.get(req, res));
         const order = {
-            user: { address: req.body.address},
+            user: { address: req.body.address },
+            payment_mode: req.body.payment_mode,
+            status: "Pending",
             total: 0,
         }
         const userData = authHelper.getUserByToken(req)
@@ -20,10 +22,17 @@ module.exports = {
                 order.user.id = userData.user._id;
                 // console.log("order data", order);
                 const orders = new Orders(order);
-                orders.save().then((result) => {
-                    res.send(result);
+                orders.save().then((data) => {
+                    console.log("user data", { user: userData.user._id });
+                    Cart.findOneAndDelete({ user: userData.user._id }).exec((err, newdata) => {
+                        if (!err && newdata) {
+                            res.send(newdata);
+                        } else {
+                            res.send(err);
+                        }
+                    });
                 }).catch((error) => {
-                    res.send(error.errmsg);
+                    res.send(error);
                 })
             } else {
                 console.log("error", err)
@@ -39,7 +48,7 @@ module.exports = {
         // console.log(orders);
     },
     get: (req, res) => {
-        Orders.find().populate({ path: 'product' }).exec((err, result) => {
+        Orders.find().populate({ path: 'product.id' }).exec((err, result) => {
             if (!err && result) {
                 res.send(result);
             } else {
@@ -47,5 +56,4 @@ module.exports = {
             }
         })
     }
-
 }
