@@ -55,5 +55,16 @@ module.exports = {
                 res.send(err);
             }
         })
+    },
+    updateStatus: (req, res) => {
+        const params = req.params;
+        const body = req.body;
+        Orders.findByIdAndUpdate(params.order_id, { $set: { status: body.action } }).exec((err, result) => {
+            if (!err && result) {
+                res.send(result);
+            } else {
+                res.send(err);
+            }
+        })
     }
 }
